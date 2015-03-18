@@ -32,12 +32,17 @@ module.exports = function(app, config) {
     require(controller)(app);
   });
 
+	var resources = glob.sync(config.root + '/app/resources/*.js');
+	resources.forEach(function (resource) {
+	 require(resource)(app);
+	});
+
   app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
   });
-  
+
   if(app.get('env') === 'development'){
     app.use(function (err, req, res, next) {
       res.status(err.status || 500);

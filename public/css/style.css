@@ -1,1 +1,23 @@
-body{padding:50px;font:14px "Lucida Grande",Helvetica,Arial,sans-serif}a{color:#00b7ff}
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+}
+
+h1, p {
+    padding: 10px;
+}
+
+.flx-map {
+    margin-top: -20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.map {
+    flex: 1;
+    margin-bottom: 50px;
+}

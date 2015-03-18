@@ -1,13 +1,36 @@
 doctype html
 html(lang='en')
-  head
-    meta(charset='UTF-8')
-    meta(name='viewport', content='width=device-width')
-    title= title
-    block css
-      link(rel='stylesheet', href='/css/style.css')
-    block js
-      if ENV_DEVELOPMENT
-        script(src='http://localhost:35729/livereload.js')
-  body
-    block content
+	head
+		meta(charset='UTF-8')
+		meta(name='viewport', content='width=device-width')
+		title= title
+		block css
+			link(rel='stylesheet', href='/css/style.css')
+			link(rel='stylesheet', href='/components/leaflet/dist/leaflet.css')
+			link(rel='stylesheet', href='/components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css')
+			link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.css')
+			link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.css')
+			link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap-theme.css')
+		block js
+			if ENV_DEVELOPMENT
+				script(src='http://localhost:35729/livereload.js')
+			script(src='/components/underscore/underscore.js')
+			script(src='/components/leaflet/dist/leaflet.js')
+			script(src='/components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js')
+			script(src='/components/jquery/dist/jquery.js')
+			script(src='/components/bootstrap/dist/js/bootstrap.js')
+			script(src='/components/angular/angular.js')
+			script(src='/components/angular-leaflet-directive/dist/angular-leaflet-directive.js')
+			script(src='/js/app.js')
+	body(ng-app="demoapp")
+		nav.navbar.navbar-default.navbar-static-top.navbar-inverse
+			.container
+				.navbar-header
+					a.navbar-brand(href="/") iFLUX MapBox Viewer
+				ul.nav.navbar-nav
+					li
+						a(href="/publibike") Publibike Map
+					li
+						a(href="/citizen") Citizen Engagement Map
+
+		block content
