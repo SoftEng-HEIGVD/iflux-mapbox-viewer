@@ -19,7 +19,7 @@ app.factory('DataServiceFactory', ['$http', function($http) {
 
 app.controller('PublibikeMapController', ['$scope', '$interval', 'leafletData', 'DataServiceFactory', function($scope, $interval, leafletData, dataService) {
 	var defineColor = function(remainingBikes) {
-		if (remainingBikes < 3) {
+		if (remainingBikes > 0 && remainingBikes < 3) {
 			return 'orange';
 		}
 		else if (remainingBikes >= 3) {
