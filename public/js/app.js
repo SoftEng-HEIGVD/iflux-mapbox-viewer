@@ -17,6 +17,15 @@ app.factory('DataServiceFactory', ['$http', function($http) {
 	}
 }]);
 
+var changeStateActions = {
+	created: 'orange',
+	assigned: 'blue',
+	acknowledged: 'yellow',
+	in_progress: 'purple',
+	rejected: 'red',
+	resolved: 'green'
+};
+
 app.controller('PublibikeMapController', ['$scope', '$interval', 'leafletData', 'DataServiceFactory', function($scope, $interval, leafletData, dataService) {
 	var defineColor = function(remainingBikes) {
 		if (remainingBikes > 0 && remainingBikes < 3) {
@@ -40,7 +49,7 @@ app.controller('PublibikeMapController', ['$scope', '$interval', 'leafletData', 
 		zoom: 9
 	};
 
-	$interval(function () {
+	var fn = function () {
 		dataService
 			.getData('publibike')
 			.then(function (data) {
@@ -61,7 +70,11 @@ app.controller('PublibikeMapController', ['$scope', '$interval', 'leafletData', 
 					});
 				});
 			});
-	}, 5000);
+	}
+
+	$interval(fn, 5000);
+
+	fn();
 }]);
 
 app.controller('CitizenMapController', ['$scope', '$interval', 'leafletData', 'DataServiceFactory', function($scope, $interval, leafletData, dataService) {
@@ -76,12 +89,17 @@ app.controller('CitizenMapController', ['$scope', '$interval', 'leafletData', 'D
 		zoom: 14
 	};
 
-	$interval(function() {
+	var fn = function() {
 		dataService
 			.getData('citizen')
 			.then(function(issues) {
 				_.each(issues, function(issue) {
-					if (!_.findWhere($scope.issues, { id: issue.id })) {
+					var idx = _.findIndex($scope.issues, { id: issue.id });
+
+					if (idx > -1) {
+						$scope.issues[idx] = issue;
+					}
+					else {
 						$scope.issues.push(issue);
 					}
 				});
@@ -91,19 +109,18 @@ app.controller('CitizenMapController', ['$scope', '$interval', 'leafletData', 'D
 						lat: issue.lat,
 						lng: issue.lng,
 						compileMessage: true,
-						message: '<p>{{ issue.description }}</p><p ng-if="issue.imageUrl"><img src="{{ issue.imageUrl }}" width="200px" /></p><p><strong>By {{ issue.owner }} at {{ issue.createdOn | date:"mediumDate" }}</strong></p>',
-						getMessageScope: function() {
-							var scope = $scope.$new();
-							scope.issue = issue;
-							return scope;
-						},
+						message: '<p>' + issue.description + '</p>' + (issue.imageUrl ? '<p><img src="'+ issue.imageUrl + '" width="200px" /></p>' : '') + '<p><strong>By ' + issue.owner + ' at ' + issue.createdOn + '</strong></p>',
 						icon: {
 							type: "awesomeMarker",
-							markerColor: 'red',
-							icon: 'bicycle'
+							markerColor: changeStateActions[issue.state],
+							icon: 'wrench'
 						}
 					}
 				});
 			});
-	}, 5000);
+	};
+
+	$interval(fn, 5000);
+
+	fn();
 }]);
