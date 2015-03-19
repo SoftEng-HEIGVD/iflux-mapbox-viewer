@@ -20,7 +20,7 @@ app.factory('DataServiceFactory', ['$http', function($http) {
 var changeStateActions = {
 	created: 'orange',
 	assigned: 'blue',
-	acknowledged: 'yellow',
+	acknowledged: 'cadetblue',
 	in_progress: 'purple',
 	rejected: 'red',
 	resolved: 'green'
@@ -53,6 +53,12 @@ app.controller('PublibikeMapController', ['$scope', '$interval', 'leafletData', 
 		lat: 46.801111,
 		lng: 8.226667,
 		zoom: 9
+	};
+
+	$scope.legend = {
+		position: 'bottomleft',
+		colors: [ '#7BB128', '#E47E2D', '#D94835' ],
+		labels: [ '3 bikes or more', 'Less than 3 bikes', 'No more bike' ]
 	};
 
 	var fn = function () {
@@ -92,7 +98,13 @@ app.controller('CitizenMapController', ['$scope', '$interval', 'leafletData', 'D
 	$scope.mapCenter = {
 		lat: 46.77518,
 		lng: 6.6369435,
-		zoom: 14
+		zoom: 15
+	};
+
+	$scope.legend = {
+		position: 'bottomleft',
+		colors: [ '#E47E2D', '#329ACA', '#3D6471', '#C94EB1', '#D94835', '#7BB128' ],
+		labels: [ 'Created issues', 'Assigned issues', 'Acknowledged issues', 'In progress issues', 'Rejected issues', 'Resolved issues']
 	};
 
 	var fn = function() {
