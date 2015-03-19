@@ -22,6 +22,7 @@ router.route('/')
 				actionService.store(action);
 			}
 			else if (action.type === "updateMarker") {
+				console.log("Update received");
 				actionService.update(action);
 			}
 		});

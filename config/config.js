@@ -50,7 +50,7 @@ var config = {
 			name: 'MapBox iFLUX Viewer',
 			validity: {
 				publibike: 3600000,
-				citizen: -1
+				citizen: 300000
 			}
 		},
 		port: 3000

@@ -26,6 +26,12 @@ var changeStateActions = {
 	resolved: 'green'
 };
 
+var issueTypeCodes = {
+	bsl: 'lightbulb-o',
+	dcr: 'road',
+	grf: 'asterisk'
+};
+
 app.controller('PublibikeMapController', ['$scope', '$interval', 'leafletData', 'DataServiceFactory', function($scope, $interval, leafletData, dataService) {
 	var defineColor = function(remainingBikes) {
 		if (remainingBikes > 0 && remainingBikes < 3) {
@@ -93,16 +99,7 @@ app.controller('CitizenMapController', ['$scope', '$interval', 'leafletData', 'D
 		dataService
 			.getData('citizen')
 			.then(function(issues) {
-				_.each(issues, function(issue) {
-					var idx = _.findIndex($scope.issues, { id: issue.id });
-
-					if (idx > -1) {
-						$scope.issues[idx] = issue;
-					}
-					else {
-						$scope.issues.push(issue);
-					}
-				});
+				$scope.issues = issues;
 
 				$scope.mapMarkers = _.map($scope.issues, function(issue) {
 					return {
@@ -112,8 +109,9 @@ app.controller('CitizenMapController', ['$scope', '$interval', 'leafletData', 'D
 						message: '<p>' + issue.description + '</p>' + (issue.imageUrl ? '<p><img src="'+ issue.imageUrl + '" width="200px" /></p>' : '') + '<p><strong>By ' + issue.owner + ' at ' + issue.createdOn + '</strong></p>',
 						icon: {
 							type: "awesomeMarker",
+							prefix: 'fa',
 							markerColor: changeStateActions[issue.state],
-							icon: 'wrench'
+							icon: issueTypeCodes[issue.issueTypeCode]
 						}
 					}
 				});
