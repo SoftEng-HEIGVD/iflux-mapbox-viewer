@@ -64,3 +64,9 @@ h1, p {
 .archi > img {
     flex: 0 0 auto;
 }
+
+@media(max-width: 1038px) {
+    .archi > img {
+        width: 100%;
+    }
+}
