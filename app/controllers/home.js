@@ -27,3 +27,7 @@ router.get('/publibike', function (req, res, next) {
 router.get('/citizen', function (req, res, next) {
 	res.render('citizen', { isPage: isPage('citizen') });
 });
+
+router.get('/archi', function (req, res, next) {
+	res.render('architecture', { isPage: isPage('archi') });
+});
