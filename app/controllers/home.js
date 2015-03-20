@@ -5,14 +5,25 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
+function isPage(referencePage) {
+	return function(page) {
+		if (page == referencePage) {
+			return 'active';
+		}
+		else {
+			return null;
+		}
+	}
+}
+
 router.get('/', function (req, res, next) {
-	res.render('index', {});
+	res.render('index', { isPage: isPage('home') });
 });
 
 router.get('/publibike', function (req, res, next) {
-	res.render('publibike', {});
+	res.render('publibike', { isPage: isPage('publibike') });
 });
 
 router.get('/citizen', function (req, res, next) {
-	res.render('citizen', {});
+	res.render('citizen', { isPage: isPage('citizen') });
 });

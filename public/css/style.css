@@ -17,6 +17,19 @@ h1, p {
     flex-direction: column;
 }
 
+.map-title {
+    width: 100%;
+    position: absolute;
+    top: 50px;
+    opacity: .6;
+    background-color: white;
+    z-index: 1000;
+    font-size: 3em;
+    font-weight: bold;
+    padding: .2em;
+    text-align: center;
+}
+
 .map {
     flex: 1;
     margin-bottom: 50px;

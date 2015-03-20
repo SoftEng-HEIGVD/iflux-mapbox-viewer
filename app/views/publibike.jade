@@ -1,5 +1,6 @@
 extends layout
 
 block content
-	.flx-map(ng-controller="PublibikeMapController")
-		leaflet(class="map" id="map" markers="mapMarkers" legend="legend" defaults="defaults" center="mapCenter")
+    .map-title Publibike Map
+    .flx-map(ng-controller="PublibikeMapController")
+        leaflet(class="map" id="map" markers="mapMarkers" legend="legend" defaults="defaults" center="mapCenter")
