@@ -5,29 +5,34 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
-function isPage(referencePage) {
-	return function(page) {
-		if (page == referencePage) {
-			return 'active';
-		}
-		else {
-			return null;
-		}
-	}
+function extractPage(req, res, next) {
+	var path = req._parsedUrl.path.split('/');
+
+	req.app.locals.page = path[1];
+
+	next();
 }
 
-router.get('/', function (req, res, next) {
-	res.render('index', { isPage: isPage('home') });
-});
+router.route('/')
+	.get(extractPage)
+	.get(function (req, res, next) {
+		res.render('index');
+	});
 
-router.get('/publibike', function (req, res, next) {
-	res.render('publibike', { isPage: isPage('publibike') });
-});
+router.route('/publibike')
+	.get(extractPage)
+	.get(function (req, res, next) {
+		res.render('publibike');
+	});
 
-router.get('/citizen', function (req, res, next) {
-	res.render('citizen', { isPage: isPage('citizen') });
-});
+router.route('/citizen')
+	.get(extractPage)
+	.get(function (req, res, next) {
+		res.render('citizen');
+	});
 
-router.get('/archi', function (req, res, next) {
-	res.render('architecture', { isPage: isPage('archi') });
-});
+router.route('/archi')
+	.get(extractPage)
+	.get(function (req, res, next) {
+		res.render('architecture');
+	});
