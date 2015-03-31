@@ -4,11 +4,11 @@ var defaults = {
 	tileLayer: "http://api.tiles.mapbox.com/v4/prevole.lg1gah58/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicHJldm9sZSIsImEiOiJYblZPX3d3In0.AtoGoTAtUJAcBDEI0df6qw"
 };
 
-app.factory('DataServiceFactory', ['$http', function($http) {
+app.factory('DataServiceFactory', ['$http', 'CONTEXT_ROOT', function($http, CONTEXT_ROOT) {
 	return {
 		getData: function(collection) {
 			return $http({
-				url: '/data/' + collection
+				url: CONTEXT_ROOT + '/data/' + collection
 			})
 			.then(function(res) {
 				return res.data;
