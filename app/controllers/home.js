@@ -5,34 +5,13 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
-function extractPage(req, res, next) {
-	var path = req._parsedUrl.path.split('/');
-
-	req.app.locals.page = path[1];
-
-	next();
-}
-
 router.route('/')
-	.get(extractPage)
-	.get(function (req, res, next) {
-		res.render('index');
+	.get(function(req, res, next) {
+		res.render('layout');
 	});
 
-router.route('/publibike')
-	.get(extractPage)
+router.route('/partials/:page')
 	.get(function (req, res, next) {
-		res.render('publibike');
+		res.render('partials/' + req.params.page);
 	});
 
-router.route('/citizen')
-	.get(extractPage)
-	.get(function (req, res, next) {
-		res.render('citizen');
-	});
-
-router.route('/archi')
-	.get(extractPage)
-	.get(function (req, res, next) {
-		res.render('architecture');
-	});

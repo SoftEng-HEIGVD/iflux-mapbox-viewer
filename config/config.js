@@ -11,47 +11,55 @@ var config = {
   development: {
     root: rootPath,
     app: {
-      name: 'MapBox iFLUX Viewer',
-			validity: {
-				publibike: 3600000,
-				citizen: -1
-			}
+      name: 'MapBox iFLUX Viewer'
     },
+	  viewbox: {
+			storageEnabled: true,
+			storagePath: "/tmp",
+		  actionType: process.env.VIEWBOX_ACTION_TYPE,
+		  defaultExpiration: 300000
+		},
     port: process.env.PORT || 3004
   },
 
   test: {
     root: rootPath,
     app: {
-			name: 'MapBox iFLUX Viewer',
-			validity: {
-				publibike: 3600000,
-				citizen: -1
-			}
+			name: 'MapBox iFLUX Viewer'
     },
+	  viewbox: {
+			storageEnabled: false,
+			storagePath: "",
+		  actionType: process.env.VIEWBOX_ACTION_TYPE,
+		  defaultExpiration: 300000
+		},
     port: process.env.PORT || 3004
   },
 
   production: {
     root: rootPath,
     app: {
-			name: 'MapBox iFLUX Viewer',
-			validity: {
-				publibike: 3600000,
-				citizen: -1
-			}
+			name: 'MapBox iFLUX Viewer'
     },
+	  viewbox: {
+			storageEnabled: true,
+			storagePath: "",
+		  actionType: process.env.VIEWBOX_ACTION_TYPE,
+		  defaultExpiration: 300000
+		},
     port: process.env.PORT || 3004
   },
 
 	docker: {
 		root: rootPath,
 		app: {
-			name: 'MapBox iFLUX Viewer',
-			validity: {
-				publibike: 3600000,
-				citizen: 300000
-			}
+			name: 'MapBox iFLUX Viewer'
+		},
+		viewbox: {
+			storageEnabled: true,
+			storagePath: "/data/viewbox",
+		  actionType: process.env.VIEWBOX_ACTION_TYPE,
+			defaultExpiration: 300000
 		},
 		port: 3000
 	}

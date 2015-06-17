@@ -1,53 +1,81 @@
 var
 	_ = require('underscore'),
 	moment = require('moment'),
-	config = require('../../config/config');
+	config = require('../../config/config'),
+	viewConfigService = require('./viewConfigService');
 
-var actionCollections = {};
+//var actionCollections = {};
+
+var maps = {};
 
 module.exports = {
 	store: function(action) {
-		var collectionName = action.properties.markerType;
-		var id = action.properties.data[action.properties.key];
+		console.log(action);
 
-		if (!actionCollections[collectionName]) {
-			console.log("Unknown collection %s, initialize a new collection for it", collectionName)
-			actionCollections[collectionName] = [];
+		var id = action.payload.markerId;
+		var mapId = action.instanceId;
+
+		if (!maps[mapId]) {
+			console.log("Unknown map %s, initialize a new collection for it", mapId)
+			maps[mapId] = {
+				name: viewConfigService.get(mapId).conf.mapName,
+				markers: {}
+			};
 		}
 
-		var data = _.pick(action.properties, 'lat', 'lng', 'date');
+		// Prepare the data to store
+		var data = _.pick(action.payload, 'lat', 'lng', 'date');
+		data = _.extend(data, action.payload.data);
 
-		data = _.extend(data, action.properties.data);
+		// Store/overwrite data
+		maps[mapId].markers[id] = data;
 
-		var idx = _.findIndex(actionCollections[collectionName], { id: id });
+		console.log(maps);
 
-		if (idx == -1) {
-			actionCollections[collectionName].push(data);
-		}
-		else {
-			actionCollections[collectionName][idx] = data;
-		}
-
-		console.log("%s element(s) stored in the collection %s", actionCollections[collectionName].length, collectionName);
+		console.log("%s element(s) stored in the collection %s", maps[mapId].markers.length, mapId);
 	},
 
-	update: function(action) {
-		this.store(action);
-	},
-
-	getCollection: function(collection) {
-		if (_.isUndefined(actionCollections[collection])) {
-			return [];
-		}
-
-		if (config.app.validity[collection] >= 0) {
-			var expirationDate = moment().subtract(config.app.validity[collection], 'milliseconds');
-
-			actionCollections[collection] = _.filter(actionCollections[collection], function(data) {
-				return moment(data.date, moment.ISO_8601).isAfter(moment(expirationDate));
+	getMaps: function() {
+		return _.reduce(maps, function(memo, data, key) {
+			memo.push({
+				mapId: key,
+				name: data.name
 			});
+
+			return memo;
+		}, []);
+	},
+
+	getMap: function(mapId) {
+		if (_.isUndefined(maps[mapId])) {
+			return null;
 		}
 
-		return actionCollections[collection];
+		var expiration = viewConfigService.get(mapId).conf.expiration || config.app.viewbox.defaultExpiration;
+
+		if (expiration >= 0) {
+			var expirationDate = moment().subtract(expiration, 'milliseconds');
+
+			maps[mapId].markers = _.reduce(maps[mapId].markers, function(memo, data, key) {
+				if (moment(data.date, moment.ISO_8601).isAfter(moment(expirationDate))) {
+					memo[key] = data;
+				}
+
+				return memo;
+			}, {});
+		}
+
+		var mapConfig = viewConfigService.get(mapId).conf.mapConfig;
+
+		return {
+			name: maps[mapId].name,
+			config: {
+				lat: mapConfig.centerLat,
+				lng: mapConfig.centerLng,
+				zoom: mapConfig.initialZoom
+			},
+			legendType: mapConfig.legendType,
+			markers: maps[mapId].markers
+		};
 	}
 };

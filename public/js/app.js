@@ -1,21 +1,21 @@
-var app = angular.module('demoapp', ['leaflet-directive']);
+var app = angular.module('demoapp', ['ui.router', 'leaflet-directive']);
 
 var defaults = {
 	tileLayer: "http://api.tiles.mapbox.com/v4/prevole.lg1gah58/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicHJldm9sZSIsImEiOiJYblZPX3d3In0.AtoGoTAtUJAcBDEI0df6qw"
 };
 
-app.factory('DataServiceFactory', ['$http', 'CONTEXT_ROOT', function($http, CONTEXT_ROOT) {
-	return {
-		getData: function(collection) {
-			return $http({
-				url: CONTEXT_ROOT + '/data/' + collection
-			})
-			.then(function(res) {
-				return res.data;
-			});
-		}
+var legends = {
+	bike: {
+		position: 'bottomleft',
+		colors: [ '#7BB128', '#E47E2D', '#D94835' ],
+		labels: [ '3 bikes or more', 'Less than 3 bikes', 'No more bike' ]
+	},
+	citizen: {
+		position: 'bottomleft',
+		colors: [ '#E47E2D', '#329ACA', '#3D6471', '#C94EB1', '#D94835', '#7BB128' ],
+		labels: [ 'Created issues', 'Assigned issues', 'Acknowledged issues', 'In progress issues', 'Rejected issues', 'Resolved issues']
 	}
-}]);
+};
 
 var changeStateActions = {
 	created: 'orange',
@@ -32,105 +32,155 @@ var issueTypeCodes = {
 	grf: 'asterisk'
 };
 
-app.controller('PublibikeMapController', ['$scope', '$interval', 'leafletData', 'DataServiceFactory', function($scope, $interval, leafletData, dataService) {
-	var defineColor = function(remainingBikes) {
-		if (remainingBikes > 0 && remainingBikes < 3) {
-			return 'orange';
-		}
-		else if (remainingBikes >= 3) {
-			return 'green';
-		}
-		else {
-			return 'red';
-		}
-	};
-
-	$scope.mapMarkers = [];
-
-	$scope.defaults = defaults;
-
-	$scope.mapCenter = {
-		lat: 46.801111,
-		lng: 8.226667,
-		zoom: 9
-	};
-
-	$scope.legend = {
-		position: 'bottomleft',
-		colors: [ '#7BB128', '#E47E2D', '#D94835' ],
-		labels: [ '3 bikes or more', 'Less than 3 bikes', 'No more bike' ]
-	};
-
-	var fn = function () {
-		dataService
-			.getData('publibike')
-			.then(function (data) {
-				$scope.mapMarkers = [];
-
-				_.each(data, function (item) {
-					$scope.mapMarkers.push({
-						lat: item.lat,
-						lng: item.lng,
-						compileMessage: true,
-						message: '<p>At ' + item.date + ', only ' + item.remainingBikes + ' bike' + (item.remainingBikes > 1 ? 's' : '') +  ' available at the station ' + item.name + ', ' + item.street + ', ' + item.zip + ' ' + item.city + '.</p>',
-						icon: {
-							type: 'awesomeMarker',
-							prefix: 'fa',
-							markerColor: defineColor(item.remainingBikes),
-							icon: 'bicycle'
-						}
-					});
-				});
-			});
+function defineBikeColor(bikes) {
+	if (bikes > 0 && bikes < 3) {
+		return 'orange';
 	}
+	else if (bikes >= 3) {
+		return 'green';
+	}
+	else {
+		return 'red';
+	}
+};
 
-	$interval(fn, 5000);
 
-	fn();
+var markerMakers = {
+	bike: function(station) {
+		return {
+			lat: station.lat,
+			lng: station.lng,
+			compileMessage: true,
+			message: '<p>At ' + station.date + ', the station ' + station.name + ', ' + station.street + ', ' + station.zip + ' ' + station.city +
+				' has only:<ul><li>' + station.bikes + ' bike' + (station.bikes > 1 ? 's' : '') +  ' available,</li>' +
+				'<li>' + station.freeholders + ' holder' + (station.freeholders > 1 ? 's' : '') +  ' available.</li></ul></p>',
+			icon: {
+				type: 'awesomeMarker',
+				prefix: 'fa',
+				markerColor: defineBikeColor(station.bikes),
+					icon: 'bicycle'
+			}
+		};
+	},
+
+	citizen: function(issue) {
+		return {
+			lat: issue.lat,
+			lng: issue.lng,
+			compileMessage: true,
+			message: '<p>' + issue.description + '</p>' + (issue.imageUrl ? '<p><img src="'+ issue.imageUrl + '" width="200px" /></p>' : '') + '<p><strong>By ' + issue.owner + ' at ' + issue.createdOn + '</strong></p>',
+			icon: {
+				type: "awesomeMarker",
+				prefix: 'fa',
+				markerColor: changeStateActions[issue.state],
+				icon: issueTypeCodes[issue.issueTypeCode]
+			}
+		};
+	}
+};
+
+app.config(function($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise("/main");
+
+	$stateProvider
+    .state('main', {
+      url: '/main',
+      templateUrl: 'partials/index'
+    })
+	  .state('map', {
+		  url: '/maps/:mapId',
+		  templateUrl: 'partials/map'
+	  })
+    .state('archi', {
+      url: '/archi',
+      templateUrl: 'partials/architecture'
+    })
+	;
+});
+
+app.factory('DataServiceFactory', ['$http', 'CONTEXT_ROOT', function($http, CONTEXT_ROOT) {
+	var maps = [];
+
+	return {
+		getMaps: function () {
+			return $http({
+				url: CONTEXT_ROOT + '/data/maps'
+			})
+			//		mapId: 2,
+			//		name: 'Citizen',
+			//		//config: {
+			//		//	lat: 46.77518,
+			//		//	lng: 6.6369435,
+			//		//	zoom: 15
+			//		//}
+			.then(function (res) {
+				maps = res.data;
+				return res.data;
+			});
+		},
+
+		getMap: function(mapId) {
+			return $http({
+				url: CONTEXT_ROOT + '/data/maps/' + mapId
+			})
+			.then(function(res) {
+				return res.data;
+			});
+		}
+	}
 }]);
 
-app.controller('CitizenMapController', ['$scope', '$interval', 'leafletData', 'DataServiceFactory', function($scope, $interval, leafletData, dataService) {
-	$scope.mapMarkers = [];
-	$scope.issues = [];
+app.controller('MapsListController', [ '$scope', 'DataServiceFactory', function($scope, dataService) {
+	$scope.maps = [];
+
+	$scope.init = function() {
+		dataService
+			.getMaps()
+			.then(function(data) {
+				$scope.maps = data;
+			});
+	}
+}]);
+
+app.controller('MapController', [ '$scope', '$stateParams', '$interval', 'DataServiceFactory', function($scope, $stateParams, $interval, dataService) {
+	$scope.mapId;
+
+	$scope.map = undefined;
+
+	$scope.center = {
+		lat: 0,
+		lng: 0,
+		zoom: 12
+	};
 
 	$scope.defaults = defaults;
-
-	$scope.mapCenter = {
-		lat: 46.77518,
-		lng: 6.6369435,
-		zoom: 15
-	};
-
-	$scope.legend = {
-		position: 'bottomleft',
-		colors: [ '#E47E2D', '#329ACA', '#3D6471', '#C94EB1', '#D94835', '#7BB128' ],
-		labels: [ 'Created issues', 'Assigned issues', 'Acknowledged issues', 'In progress issues', 'Rejected issues', 'Resolved issues']
-	};
 
 	var fn = function() {
 		dataService
-			.getData('citizen')
-			.then(function(issues) {
-				$scope.issues = issues;
+			.getMap($stateParams.mapId)
+			.then(function(data) {
 
-				$scope.mapMarkers = _.map($scope.issues, function(issue) {
-					return {
-						lat: issue.lat,
-						lng: issue.lng,
-						compileMessage: true,
-						message: '<p>' + issue.description + '</p>' + (issue.imageUrl ? '<p><img src="'+ issue.imageUrl + '" width="200px" /></p>' : '') + '<p><strong>By ' + issue.owner + ' at ' + issue.createdOn + '</strong></p>',
-						icon: {
-							type: "awesomeMarker",
-							prefix: 'fa',
-							markerColor: changeStateActions[issue.state],
-							icon: issueTypeCodes[issue.issueTypeCode]
-						}
+				if ($scope.mapId != $stateParams.mapId) {
+					$scope.mapId = $stateParams.mapId;
+					$scope.center = _.pick(data.config, 'lat', 'lng', 'zoom');
+					$scope.map = data;
+					$scope.legend = legends[data.legendType];
+				}
+
+				$scope.markers = _.reduce(data.markers, function(memo, marker) {
+					if (markerMakers[marker.type]) {
+						memo.push(markerMakers[marker.type](marker));
 					}
-				});
+					else {
+						console.log('Marker maker is not defined for type: %s', marker.type);
+					}
+
+					return memo;
+				}, []);
 			});
 	};
 
-	$interval(fn, 5000);
+	$interval(fn, 15000);
 
 	fn();
 }]);

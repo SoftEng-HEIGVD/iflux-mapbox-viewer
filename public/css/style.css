@@ -10,29 +10,30 @@ h1, p {
     padding: 10px;
 }
 
-.flx-map {
+.map-box {
+    flex-direction: column;
     margin-top: -20px;
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
 }
 
 .map-title {
-    width: 100%;
-    position: absolute;
-    top: 50px;
-    opacity: .6;
     background-color: white;
-    z-index: 1000;
-    font-size: 3em;
-    font-weight: bold;
-    padding: .2em;
     text-align: center;
+    font-weight: bold;
+    max-height: 50px;
+    font-size: 2.5em;
+    flex: 1 0 auto;
+}
+
+.map-content {
+    margin-bottom: 50px;
+    flex: 1 0 auto;
+    padding: 0 10px 10px;
 }
 
 .map {
-    flex: 1;
-    margin-bottom: 50px;
+    height: 100%;
 }
 
 .legend {

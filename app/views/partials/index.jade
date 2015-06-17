@@ -1,0 +1,12 @@
+.container
+	.jumbotron
+		h1 Welcome on iFLUX MapBox Viewer
+
+		p
+			| You will be able to visualize maps related to&nbsp;
+			a(href="http://www.iflux.io" target="_blank") iFLUX
+			| &nbsp;projects made for demo.
+
+	ul(ng-controller="MapsListController" ng-init="init()")
+		li(ng-repeat="map in maps")
+			a(ui-sref="map({ mapId: map.mapId })") {{ map.name }}

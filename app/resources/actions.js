@@ -2,6 +2,7 @@ var
 	_ = require('underscore'),
 	express = require('express'),
 	router = express.Router(),
+	config = require('../../config/config'),
 	actionService = require('../services/actionService');
 
 module.exports = function (app) {
@@ -16,14 +17,11 @@ router.route('/')
   	console.log("Received " + actions.length + " actions on REST API.");
 
 		_.each(actions, function(action) {
-			console.log("Action: " + action.type);
+			console.log("Action: %s", action.type);
 
-			if (action.type === "newMarker") {
+			if (action.type === config.viewbox.actionType) {
+				console.log("type matched");
 				actionService.store(action);
-			}
-			else if (action.type === "updateMarker") {
-				console.log("Update received");
-				actionService.update(action);
 			}
 		});
 
