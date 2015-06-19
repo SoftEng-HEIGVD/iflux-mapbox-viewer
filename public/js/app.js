@@ -152,15 +152,20 @@ app.controller('MapController', [ '$scope', '$stateParams', '$interval', 'DataSe
 		dataService
 			.getMap($stateParams.mapId)
 			.then(function(data) {
+				if (!data) {
+					return;
+				}
+
+				console.log(data);
 
 				if ($scope.mapId != $stateParams.mapId) {
 					$scope.mapId = $stateParams.mapId;
-					$scope.center = _.pick(data.config, 'lat', 'lng', 'zoom');
 					$scope.map = data;
+					$scope.center = _.pick(data.config, 'lat', 'lng', 'zoom');
 					$scope.legend = legends[data.legendType];
 				}
 
-				$scope.markers = _.reduce(data.markers, function(memo, marker) {
+				$scope.markers = _.reduce(data.markers, function (memo, marker) {
 					if (markerMakers[marker.type]) {
 						memo.push(markerMakers[marker.type](marker));
 					}

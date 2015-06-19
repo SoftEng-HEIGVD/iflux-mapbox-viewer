@@ -30,52 +30,46 @@ module.exports = {
 		// Store/overwrite data
 		maps[mapId].markers[id] = data;
 
-		console.log(maps);
-
 		console.log("%s element(s) stored in the collection %s", maps[mapId].markers.length, mapId);
 	},
 
-	getMaps: function() {
-		return _.reduce(maps, function(memo, data, key) {
-			memo.push({
-				mapId: key,
-				name: data.name
-			});
-
-			return memo;
-		}, []);
-	},
-
 	getMap: function(mapId) {
-		if (_.isUndefined(maps[mapId])) {
-			return null;
-		}
+		var mapDef = viewConfigService.get(mapId);
 
-		var expiration = viewConfigService.get(mapId).conf.expiration || config.app.viewbox.defaultExpiration;
+		if (mapDef) {
+			var markers = [];
 
-		if (expiration >= 0) {
-			var expirationDate = moment().subtract(expiration, 'milliseconds');
+			if (maps[mapId]) {
+				var expiration = mapDef.conf.expiration || config.app.viewbox.defaultExpiration;
 
-			maps[mapId].markers = _.reduce(maps[mapId].markers, function(memo, data, key) {
-				if (moment(data.date, moment.ISO_8601).isAfter(moment(expirationDate))) {
-					memo[key] = data;
+				if (expiration >= 0) {
+					var expirationDate = moment().subtract(expiration, 'milliseconds');
+
+					maps[mapId].markers = _.reduce(maps[mapId].markers, function (memo, data, key) {
+						if (moment(data.date, moment.ISO_8601).isAfter(moment(expirationDate))) {
+							memo[key] = data;
+						}
+
+						return memo;
+					}, {});
 				}
 
-				return memo;
-			}, {});
+				markers = maps[mapId].markers;
+			}
+
+			return {
+				name: mapDef.conf.mapName,
+				config: {
+					lat: mapDef.conf.mapConfig.centerLat,
+					lng: mapDef.conf.mapConfig.centerLng,
+					zoom: mapDef.conf.mapConfig.initialZoom
+				},
+				legendType: mapDef.conf.mapConfig.legendType,
+				markers: markers
+			};
 		}
-
-		var mapConfig = viewConfigService.get(mapId).conf.mapConfig;
-
-		return {
-			name: maps[mapId].name,
-			config: {
-				lat: mapConfig.centerLat,
-				lng: mapConfig.centerLng,
-				zoom: mapConfig.initialZoom
-			},
-			legendType: mapConfig.legendType,
-			markers: maps[mapId].markers
-		};
+		else {
+			return null;
+		}
 	}
 };

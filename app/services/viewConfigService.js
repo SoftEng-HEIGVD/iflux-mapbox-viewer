@@ -39,6 +39,17 @@ module.exports = {
 		this.save();
 	},
 
+	getMaps: function() {
+		return _.reduce(viewConfig, function(memo, config, key) {
+			memo.push({
+				mapId: key,
+				name: config.conf.mapName
+			});
+
+			return memo;
+		}, []);
+	},
+
 	get: function(instanceId) {
 		return viewConfig[instanceId];
 	}
