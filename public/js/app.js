@@ -106,13 +106,6 @@ app.factory('DataServiceFactory', ['$http', 'CONTEXT_ROOT', function($http, CONT
 			return $http({
 				url: CONTEXT_ROOT + '/data/maps'
 			})
-			//		mapId: 2,
-			//		name: 'Citizen',
-			//		//config: {
-			//		//	lat: 46.77518,
-			//		//	lng: 6.6369435,
-			//		//	zoom: 15
-			//		//}
 			.then(function (res) {
 				maps = res.data;
 				return res.data;
