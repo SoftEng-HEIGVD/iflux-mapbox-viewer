@@ -4,14 +4,10 @@ var
 	config = require('../../config/config'),
 	viewConfigService = require('./viewConfigService');
 
-//var actionCollections = {};
-
 var maps = {};
 
 module.exports = {
 	store: function(action) {
-		console.log(action);
-
 		var id = action.payload.markerId;
 		var mapId = action.instanceId;
 
@@ -30,7 +26,7 @@ module.exports = {
 		// Store/overwrite data
 		maps[mapId].markers[id] = data;
 
-		console.log("%s element(s) stored in the collection %s", maps[mapId].markers.length, mapId);
+		console.log("New element(s) stored in the collection %s", mapId);
 	},
 
 	getMap: function(mapId) {

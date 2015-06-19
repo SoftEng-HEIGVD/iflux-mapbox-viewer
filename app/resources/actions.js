@@ -14,13 +14,10 @@ router.route('/')
 	.post(function (req, res) {
   	var actions = req.body;
 
-  	console.log("Received " + actions.length + " actions on REST API.");
+  	console.log('Received %s actions on REST API.', actions.length);
 
 		_.each(actions, function(action) {
-			console.log("Action: %s", action.type);
-
 			if (action.type === config.viewbox.actionType) {
-				console.log("type matched");
 				actionService.store(action);
 			}
 		});
