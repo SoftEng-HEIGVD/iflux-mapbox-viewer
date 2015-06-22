@@ -9,7 +9,7 @@ ADD . /nodejs/mapbox-viewer
 # See: http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/ (similar approach for bower)
 ADD bower.json /tmp/bower.json
 RUN cd /tmp && bower install --allow-root
-RUN mkdir /nodejs/mapbox-viewer/public/components && cp -a /tmp/bower_components/* /nodejs/mapbox-viewer/public/components
+RUN mkdir -p /nodejs/mapbox-viewer/public/components && cp -a /tmp/bower_components/* /nodejs/mapbox-viewer/public/components
 
 # See: http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/
 ADD package.json /tmp/package.json
