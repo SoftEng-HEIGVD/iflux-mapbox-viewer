@@ -80,7 +80,9 @@ var markerMakers = {
 };
 
 app.config(function($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise("/main");
+	$locationProvider.html5Mode(true);
+
+	$urlRouterProvider.otherwise("/main");
 
 	$stateProvider
     .state('main', {
