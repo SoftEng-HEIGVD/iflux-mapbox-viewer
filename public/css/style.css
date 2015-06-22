@@ -97,7 +97,7 @@ h1, p {
 }
 
 
-@media(max-width: 1544px) {
+@media(max-width: 1527px) {
     .archi {
         min-height: 100vh !important;
     }
