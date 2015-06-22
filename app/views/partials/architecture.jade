@@ -1,2 +1,49 @@
 .archi
 	img(src=contextRoot + '/img/iflux-docker-setup.png')
+	div
+		.descr-container
+			.descr-item
+				h4.descr-item-heading iFLUX Events API #[a(href='/api/v1/events') /api/v1/events]
+				p.descr-item-text Send events to iFLUX.
+			.descr-item
+				h4.descr-item-heading iFLUX API #[a(href='/api/v1') /api/v1/]
+				p.descr-item-text Use iFLUX API to create action targets, event sources, rules and more.
+			.descr-item
+				h4.descr-item-heading iFLUX API Doc #[a(href='/doc') /doc]
+				p.descr-item-text Read the iFLUX API documentation to learn how to use the iFLUX API.
+			.descr-item
+				h4.descr-item-heading Citizen Backend #[a(href='/citizen') /citizen]
+				p.descr-item-text Use the Citizen Backend API to create and manage issues. This will send events to iFLUX. Therefore, you will be able to visualize some results in the ViewBox.
+			.descr-item
+				h4.descr-item-heading Metrics #[a(href='/metrics') /metrics]
+				p.descr-item-text The metrics component is an action target which receive events transformed to collect several metrics. The metrics are presented in simple graphs.
+			.descr-item
+				h4.descr-item-heading Slack Gateway #[a(href='/slack') /slack]
+				p.descr-item-text Slack is a messaging system especially done for enterprise world. The integration done in iFLUX allow to send notifications to specific channels. By default, this integration is not active as there is a cost to send more than 10k messages.
+			.descr-item
+				h4.descr-item-heading Viewbox #[a(href='/viewbox') /viewbox]
+				p.descr-item-text The viewbox uses MapBox to offer a map visualization of the Citizen Backend events. There is also a visualization offered for the Publibike events received.
+			.descr-item
+				h4.descr-item-heading Kibana #[a(href='/kibana') /kibana]
+				p.descr-item-text Kibana let you browse and discover the data recorded in Elastic Search from iFLUX. Currently, we have all the events stored. The events matched by a rule are also stored with the matching details.
+			.descr-item
+				h4.descr-item-heading Redirection to: #[a(href='/viewbox/archi') /viewbox/archi]
+				p.descr-item-text Any other request is redirected to this page.
+			.descr-item
+				h4.descr-item-heading Publibike Polling
+				p.descr-item-text This component periodically poll Publibike service to gather the data of the bike stations to know how many bikes and holders remain at the station.
+			.descr-item
+				h4.descr-item-heading Citizen Engagement Simulator
+				p.descr-item-text To simulate Citizen Engagement activity, a script is prepared with random data generation.
+			.descr-item
+				h4.descr-item-heading Kafka + Zookeeper
+				p.descr-item-text A bus messaging system is in place to forward the events received on the iFLUX API Gateway to iFLUX server.
+			.descr-item
+				h4.descr-item-heading ElasticSearch
+				p.descr-item-text This data storage allow to do text searches and much more on the data that iFLUX stores.
+			.descr-item
+				h4.descr-item-heading Reverse Proxy (RP)
+				p.descr-item-text This component consolidates all the services behind him to easily deploy the whole infrastructure locally through Docker.
+
+
+
