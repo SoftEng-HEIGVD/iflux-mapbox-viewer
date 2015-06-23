@@ -58,15 +58,15 @@ module.exports = function(app, config) {
   app.use(express.static(config.root + '/public'));
   app.use(methodOverride());
 
-  var controllers = glob.sync(config.root + '/app/controllers/*.js');
-  controllers.forEach(function (controller) {
-    require(controller)(app);
-  });
-
 	var resources = glob.sync(config.root + '/app/resources/*.js');
 	resources.forEach(function (resource) {
 	 require(resource)(app);
 	});
+
+  var controllers = glob.sync(config.root + '/app/controllers/*.js');
+  controllers.forEach(function (controller) {
+    require(controller)(app);
+  });
 
   app.use(function (req, res, next) {
     var err = new Error('Not Found');
