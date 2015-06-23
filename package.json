@@ -1,7 +1,21 @@
 {
-  "name": "code",
+  "name": "iflux-mapbox-viewer",
+  "description": "Map visualization tool for iFLUX demo",
   "version": "0.2.1",
   "private": true,
+  "author": {
+    "name": "Laurent Prevost",
+    "email": "laurent.prevost@heig-vd.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SoftEng-HEIGVD/iflux-mapbox-viewer.git"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/SoftEng-HEIGVD/iflux-mapbox-viewer",
+  "bugs": {
+    "url": "https://github.com/SoftEng-HEIGVD/iflux-mapbox-viewer/issues"
+  },
   "scripts": {
     "start": "node app.js"
   },
