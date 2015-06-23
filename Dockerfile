@@ -17,7 +17,8 @@ RUN cd /tmp && npm install
 RUN cp -a /tmp/node_modules /nodejs/viewbox
 
 RUN useradd -m -r -U viewbox -u 1113 \
-	&& chown -R viewbox:viewbox /nodejs/viewbox
+	&& chown -R viewbox:viewbox /nodejs/viewbox \
+	&& chown -R viewbox:viewbox /data/viewbox
 
 USER viewbox
 
