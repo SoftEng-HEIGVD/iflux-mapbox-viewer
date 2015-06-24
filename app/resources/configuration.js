@@ -11,8 +11,8 @@ module.exports = function (app) {
 
 router.route('/')
 	.post(function (req, res) {
-		if (req.body.actionTargetInstanceId) {
-			viewConfigService.upsert(req.body.actionTargetInstanceId, req.body.properties);
+		if (req.body.actionTargetId) {
+			viewConfigService.upsert(req.body.actionTargetId, req.body.properties);
 		}
 
 		return res.status(204).end();

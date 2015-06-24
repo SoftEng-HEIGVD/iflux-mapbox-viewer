@@ -16,15 +16,6 @@ module.exports = function(app, config) {
   app.locals.ENV = env;
   app.locals.ENV_DEVELOPMENT = env == 'development';
 
-	app.locals.isPage = function(referencePage) {
-		if (app.locals.page == referencePage) {
-			return 'active';
-		}
-		else {
-			return null;
-		}
-	};
-
 	app.use(function(req, res, next) {
 		var contextRoot = req.headers['x-context-root'];
 

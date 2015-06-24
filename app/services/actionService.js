@@ -9,7 +9,7 @@ var maps = {};
 module.exports = {
 	store: function(action) {
 		var id = action.payload.markerId;
-		var mapId = action.instanceId;
+		var mapId = action.actionTargetId;
 
 		if (!maps[mapId]) {
 			console.log("Unknown map %s, initialize a new collection for it", mapId)
