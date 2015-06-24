@@ -17,13 +17,13 @@ module.exports = function (grunt) {
         file: 'app.js'
       }
     },
-    stylus: {
-      dist: {
-        files: {
-          'public/css/style.css': 'public/css/style.styl'
-        }
-      }
-    },
+    //stylus: {
+    //  dist: {
+    //    files: {
+    //      'public/css/style.css': 'public/css/style.styl'
+    //    }
+    //  }
+    //},
     watch: {
       options: {
         nospawn: true,
@@ -37,15 +37,15 @@ module.exports = function (grunt) {
         ],
         tasks: ['develop', 'delayed-livereload']
       },
-      css: {
-        files: [
-          'public/css/*.styl'
-        ],
-        tasks: ['stylus'],
-        options: {
-          livereload: reloadPort
-        }
-      },
+      //css: {
+      //  files: [
+      //    'public/css/*.styl'
+      //  ],
+      //  tasks: ['stylus'],
+      //  options: {
+      //    livereload: reloadPort
+      //  }
+      //},
       views: {
         files: [
           'app/views/*.jade',
@@ -75,7 +75,6 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('default', [
-    'stylus',
     'develop',
     'watch'
   ]);

@@ -158,8 +158,6 @@ app.controller('MapController', [ '$scope', '$stateParams', '$interval', 'DataSe
 					return;
 				}
 
-				console.log(data);
-
 				if ($scope.mapId != $stateParams.mapId) {
 					$scope.mapId = $stateParams.mapId;
 					$scope.map = data;

@@ -1,6 +1,11 @@
 var express = require('express');
 var glob = require('glob');
 
+var
+	path = require('path'),
+	stylus = require('stylus'),
+	nib = require('nib');
+
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -46,7 +51,23 @@ module.exports = function(app, config) {
   }));
   app.use(cookieParser());
   app.use(compress());
-  app.use(express.static(config.root + '/public'));
+
+	app.use(stylus.middleware({
+	  src: path.join(__dirname, '../app/assets'),
+	  dest: path.join(__dirname, '../public'),
+	  debug: true,
+	  force: true,
+    compile: function(str, path) { // optional, but recommended
+	    console.log('there');
+      return stylus(str)
+	      .set('filename', path)
+	      .set('compress', true)
+	      .use(nib());
+    }
+  }));
+
+	app.use(express.static(config.root + '/public'));
+
   app.use(methodOverride());
 
 	var resources = glob.sync(config.root + '/app/resources/*.js');
