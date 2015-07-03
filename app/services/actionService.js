@@ -8,8 +8,8 @@ var maps = {};
 
 module.exports = {
 	store: function(action) {
-		var id = action.payload.markerId;
-		var mapId = action.actionTargetId;
+		var id = action.properties.markerId;
+		var mapId = action.target;
 
 		if (!maps[mapId]) {
 			console.log("Unknown map %s, initialize a new collection for it", mapId)
@@ -20,8 +20,8 @@ module.exports = {
 		}
 
 		// Prepare the data to store
-		var data = _.pick(action.payload, 'lat', 'lng', 'date');
-		data = _.extend(data, action.payload.data);
+		var data = _.pick(action.properties, 'lat', 'lng', 'date');
+		data = _.extend(data, action.properties.data);
 
 		// Store/overwrite data
 		maps[mapId].markers[id] = data;

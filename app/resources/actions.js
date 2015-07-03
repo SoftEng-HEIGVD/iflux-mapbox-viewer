@@ -14,7 +14,7 @@ router.route('/')
 	.post(function (req, res) {
   	var actions = req.body;
 
-  	console.log('Received %s actions on REST API.', actions.length);
+  	console.log('Received %s actions.', actions.length);
 
 		_.each(actions, function(action) {
 			if (action.type === config.viewbox.actionType) {
